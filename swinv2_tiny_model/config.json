@@ -1,0 +1,54 @@
+{
+  "_name_or_path": "pamixsun/swinv2_tiny_for_glaucoma_classification",
+  "architectures": [
+    "Swinv2ForImageClassification"
+  ],
+  "attention_probs_dropout_prob": 0.0,
+  "depths": [
+    2,
+    2,
+    6,
+    2
+  ],
+  "drop_path_rate": 0.1,
+  "embed_dim": 96,
+  "encoder_stride": 32,
+  "hidden_act": "gelu",
+  "hidden_dropout_prob": 0.0,
+  "hidden_size": 768,
+  "id2label": {
+    "0": "Non-glaucoma",
+    "1": "Glaucoma"
+  },
+  "image_size": 512,
+  "initializer_range": 0.02,
+  "label2id": {
+    "Glaucoma": "1",
+    "Non-glaucoma": "0"
+  },
+  "layer_norm_eps": 1e-05,
+  "mlp_ratio": 4.0,
+  "model_type": "swinv2",
+  "num_channels": 3,
+  "num_heads": [
+    3,
+    6,
+    12,
+    24
+  ],
+  "num_layers": 4,
+  "patch_size": 4,
+  "path_norm": true,
+  "pretrained_window_sizes": [
+    0,
+    0,
+    0,
+    0
+  ],
+  "problem_type": "single_label_classification",
+  "qkv_bias": true,
+  "torch_dtype": "float32",
+  "transformers_version": "4.28.0",
+  "use_absolute_embeddings": false,
+  "window_size": 8
+}
