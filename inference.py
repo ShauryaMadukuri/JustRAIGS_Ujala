@@ -9,7 +9,10 @@ from PIL import Image
 from helper import DEFAULT_GLAUCOMATOUS_FEATURES, inference_tasks
 from transformers import AutoModelForImageClassification, AutoConfig
 
+import os
 
+# Set the environment variable TRANSFORMERS_OFFLINE to 1
+os.environ['TRANSFORMERS_OFFLINE'] = '1'
 
 def get_result_task1(processor,model,checkpoint_path,image_path):
     model.load_state_dict(torch.load(checkpoint_path))
