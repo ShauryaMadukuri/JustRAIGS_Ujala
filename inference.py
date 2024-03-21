@@ -59,7 +59,7 @@ def get_result_task2(processor,model,checkpoint_path,image_path):
 
 def run():
     _show_torch_cuda_info()
-    model_directory = "swinv2_tiny_model"
+    model_directory = "/swinv2_tiny_model"
     # Load the configuration file
     config = AutoConfig.from_pretrained(model_directory)
 
@@ -69,9 +69,9 @@ def run():
     # Load the model checkpoint
     model = AutoModelForImageClassification.from_pretrained(model_directory, config=config)
 
-    checkpoint_path = 'checkpoints/swin_finetunetask11.pth'
+    checkpoint_path = '/checkpoints/swin_finetunetask11.pth'
 
-    model_directory_2 = "swinv2_tiny_model"
+    model_directory_2 = "/swinv2_tiny_model"
     # Load the configuration file
     config_2 = AutoConfig.from_pretrained(model_directory_2)
 
@@ -81,7 +81,7 @@ def run():
     # Load the model checkpoint
     model_2 = AutoModelForImageClassification.from_pretrained(model_directory_2, config=config_2)
 
-    checkpoint_path_2 = 'checkpoints/swin_finetunetask219.pth'
+    checkpoint_path_2 = '/checkpoints/swin_finetunetask219.pth'
 
     for jpg_image_file_name, save_prediction in inference_tasks():
         # Do inference, possibly something better performant
