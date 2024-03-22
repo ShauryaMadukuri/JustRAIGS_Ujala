@@ -88,11 +88,19 @@ def run():
     # Print the model_directory path
     print("model_directory =", model_directory)
 
+    # List files in the model directory
+    files_in_model_directory = os.listdir(model_directory)
+
+    # Print the files
+    print("Files in model_directory:")
+    for file in files_in_model_directory:
+        print(file)
+
     # Load the image processor if needed
     processor = AutoImageProcessor.from_pretrained(model_directory)
 
     # Load the model checkpoint
-    model = AutoModelForImageClassification.from_pretrained(model_directory)
+    model = Swinv2ForImageClassification.from_pretrained(model_directory)
 
     # Path of the checkpoint relative to the current directory
     checkpoint_path_relative = 'checkpoints/swin_finetunetask11.pth'
@@ -112,7 +120,7 @@ def run():
     processor_2 = AutoImageProcessor.from_pretrained(model_directory_2)
 
     # Load the model checkpoint
-    model_2 = AutoModelForImageClassification.from_pretrained(model_directory_2)
+    model_2 = Swinv2ForImageClassification.from_pretrained(model_directory_2)
 
     checkpoint_path_2 = 'checkpoints/swin_finetunetask219.pth'
 
