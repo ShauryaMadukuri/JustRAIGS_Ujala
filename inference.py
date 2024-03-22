@@ -71,7 +71,7 @@ def run():
     _show_torch_cuda_info()
     model_directory = "swinv2_tiny_model"
     # Load the configuration file
-    config = AutoConfig.from_pretrained(model_directory, local_files_only=True)
+    config = AutoConfig.from_pretrained(os.path.join(model_directory, "config.json"), local_files_only=True)
 
     # Load the image processor if needed
     processor = AutoImageProcessor.from_pretrained(model_directory, local_files_only=True)
@@ -83,7 +83,7 @@ def run():
 
     model_directory_2 = "swinv2_tiny_model"
     # Load the configuration file
-    config_2 = AutoConfig.from_pretrained(model_directory_2, local_files_only=True)
+    config_2 = AutoConfig.from_pretrained(os.path.join(model_directory_2, "config.json"), local_files_only=True)
 
     # Load the image processor if needed
     processor_2 = AutoImageProcessor.from_pretrained(model_directory_2, local_files_only=True)
