@@ -13,6 +13,13 @@ import os
 
 # Set the environment variable TRANSFORMERS_OFFLINE to 1
 os.environ['TRANSFORMERS_OFFLINE'] = '1'
+print(f"TRANSFORMERS_OFFLINE: {os.environ.get('TRANSFORMERS_OFFLINE')}")
+# # Set the environment variable HF_HOME to the cache directory
+# os.environ['HF_HOME'] = '/cache/huggingface'
+# print(f"HF_HOME: {os.environ.get('HF_HOME')}")
+# # Set the environment variable TRANSFORMERS_CACHE to the cache directory
+# os.environ['TRANSFORMERS_CACHE'] = '/cache/huggingface'
+
 
 def get_result_task1(processor,model,checkpoint_path,image_path):
     model.load_state_dict(torch.load(checkpoint_path))
@@ -64,25 +71,25 @@ def run():
     _show_torch_cuda_info()
     model_directory = "swinv2_tiny_model"
     # Load the configuration file
-    config = AutoConfig.from_pretrained(model_directory)
+    config = AutoConfig.from_pretrained(model_directory, local_files_only=True)
 
     # Load the image processor if needed
-    processor = AutoImageProcessor.from_pretrained(model_directory)
+    processor = AutoImageProcessor.from_pretrained(model_directory, local_files_only=True)
 
     # Load the model checkpoint
-    model = AutoModelForImageClassification.from_pretrained(model_directory, config=config)
+    model = AutoModelForImageClassification.from_pretrained(model_directory, config=config, local_files_only=True)
 
     checkpoint_path = 'checkpoints/swin_finetunetask11.pth'
 
     model_directory_2 = "swinv2_tiny_model"
     # Load the configuration file
-    config_2 = AutoConfig.from_pretrained(model_directory_2)
+    config_2 = AutoConfig.from_pretrained(model_directory_2, local_files_only=True)
 
     # Load the image processor if needed
-    processor_2 = AutoImageProcessor.from_pretrained(model_directory_2)
+    processor_2 = AutoImageProcessor.from_pretrained(model_directory_2, local_files_only=True)
 
     # Load the model checkpoint
-    model_2 = AutoModelForImageClassification.from_pretrained(model_directory_2, config=config_2)
+    model_2 = AutoModelForImageClassification.from_pretrained(model_directory_2, config=config_2, local_files_only=True)
 
     checkpoint_path_2 = 'checkpoints/swin_finetunetask219.pth'
 
