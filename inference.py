@@ -69,7 +69,10 @@ def get_result_task2(processor,model,checkpoint_path,image_path):
     return predictions
 
 
-
+def print_contents_of_folder(folder_path):
+        print(f"Contents of folder: {folder_path}")
+        for item in os.listdir(folder_path):
+            print(item)
 
 
 def run():
@@ -77,8 +80,23 @@ def run():
     # Get the current working directory
     current_directory = os.getcwd()
 
-# Print the current working directory
+    # Print the current working directory
     print("Current working directory:", current_directory)
+
+    # Print all folder names and file names in the current directory
+    print("Contents of the current directory:")
+    for item in os.listdir(current_directory):
+        print(item)
+
+    # Print all folder names and file names in the current directory
+    print("Contents of the current directory:")
+    for item in os.listdir(current_directory):
+        print(item)
+        if os.path.isdir(os.path.join(current_directory, item)):
+            print_contents_of_folder(os.path.join(current_directory, item))
+
+    
+
     # Folder to join
     model_directory = "/swinv2_tiny_model"
 
