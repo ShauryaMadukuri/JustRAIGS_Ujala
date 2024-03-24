@@ -184,10 +184,7 @@ def run():
             }
         else:
             # make all null
-            features = {
-                k: None
-                for k in DEFAULT_GLAUCOMATOUS_FEATURES.keys()
-            }
+            features = None
         ...
 
         # Finally, save the answer
