@@ -96,20 +96,22 @@ def run():
             print_contents_of_folder(os.path.join(current_directory, item))
 
     
-
+    print('Starting the model loading process...')
     # Folder to join
-    model_directory = "/swinv2_tiny_model"
+    folder_to_join = "swinv2_tiny_model"
 
     # Join the folder to the current working directory
-    # model_directory = os.path.join(current_directory, folder_to_join)
+    model_directory = os.path.join(current_directory, folder_to_join)
 
     # Print the model_directory path
-    # print("model_directory =", model_directory)
+    print("model_directory =", model_directory)
 
-    # List files in the model directory
+    # # List files in the model directory
+    # print('this is model loading')
+
     # files_in_model_directory = os.listdir(model_directory)
 
-    # Print the files
+    # # Print the files
     # print("Files in model_directory:")
     # for file in files_in_model_directory:
     #     print(file)
@@ -119,20 +121,24 @@ def run():
 
     # Load the model checkpoint
     model = Swinv2ForImageClassification.from_pretrained(model_directory)
+    print('Model 1 loaded successfully')
 
     # Path of the checkpoint relative to the current directory
-    checkpoint_path = '/checkpoints/swin_finetunetask11.pth'
+    checkpoint_path_relative = 'checkpoints/swin_finetunetask11.pth'
 
     # Join the checkpoint path with the current working directory
-    # checkpoint_path = os.path.join(current_directory, checkpoint_path_relative)
+    checkpoint_path = os.path.join(current_directory, checkpoint_path_relative)
 
     # Print the checkpoint path
-    # print("checkpoint_path =", checkpoint_path)
+    print("checkpoint_path =", checkpoint_path)
 
 
-    model_directory_2 = "/swinv2_tiny_model"
 
-    # model_directory_2 = os.path.join(current_directory, model_directory_2)
+    model_directory_2 = "swinv2_tiny_model"
+
+    model_directory_2 = os.path.join(current_directory, model_directory_2)
+
+    print("model_directory_2 =", model_directory_2)
 
     # Load the image processor if needed
     processor_2 = AutoImageProcessor.from_pretrained(model_directory_2)
@@ -142,7 +148,11 @@ def run():
 
     checkpoint_path_2 = 'checkpoints/swin_finetunetask219.pth'
 
-    # checkpoint_path_2 = os.path.join(current_directory, checkpoint_path_2)
+    checkpoint_path_2 = os.path.join(current_directory, checkpoint_path_2)
+
+    print("checkpoint_path_2 =", checkpoint_path_2)
+
+    print('Model 2 loaded successfully')
     
 
     for jpg_image_file_name, save_prediction in inference_tasks():
