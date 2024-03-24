@@ -46,7 +46,7 @@ def inference_tasks():
   for file_path in input_files:
       if file_path.suffix == ".mha":  # A single image
           yield from single_file_inference(image_file=file_path, callback=save_prediction)
-      elif file_path.suffix == ".tiff":  # A stack of images
+      elif file_path.suffix == ".tiff" or file_path.suffix == ".tif":
           yield from stack_inference(stack=file_path, callback=save_prediction)
 
   write_referable_glaucoma_decision(is_referable_glaucoma_stacked)

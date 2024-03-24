@@ -65,7 +65,8 @@ def get_result_task2(processor,model,checkpoint_path,image_path):
     outputs = model(**inputs).logits
 
     prob_predictions = torch.sigmoid(outputs)
-    predictions=(prob_predictions>0.4).tolist()[0]
+    # make it into 0,1
+    predictions=(prob_predictions>0.4).int().tolist()[0]
     return predictions
 
 
