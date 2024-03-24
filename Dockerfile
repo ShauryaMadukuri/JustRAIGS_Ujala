@@ -16,5 +16,7 @@ RUN python -m pip install \
 
 COPY --chown=user:user helper.py /opt/app
 COPY --chown=user:user inference.py /opt/app
+COPY --chown=user:user checkpoints /opt/app/checkpoints
+COPY --chown=user:user swinv2_tiny_model /opt/app/swinv2_tiny_model
 
 ENTRYPOINT ["python", "inference.py"]
