@@ -88,6 +88,30 @@ def single_file_inference(image_file, callback):
         yield output_path, callback
 
 
+def stack_inference(stack, callback):
+    de_stacked_images = []
+
+    # Unpack the stack
+    with tempfile.TemporaryDirectory() as temp_dir:
+        with Image.open(stack) as tiff_image:
+
+            # Iterate through all pages
+            for page_num in range(tiff_image.n_frames):
+                # Select the current page
+                tiff_image.seek(page_num)
+
+                # Define the output file path
+                output_path = Path(temp_dir) / f"image_{page_num + 1}.jpg"
+                tiff_image.save(output_path, "JPEG")
+
+                de_stacked_images.append(output_path)
+
+                print(f"De-Stacked {output_path}")
+
+        # Loop over the images, and generate the actual tasks
+        for index, image in enumerate(de_stacked_images):
+            # Call back that saves the result
+            yield image, callback
 
 # if case.path.suffix == '.tiff':
 #             results = []
@@ -102,29 +126,28 @@ def single_file_inference(image_file, callback):
         
 #         results = self.combine_dicts(results)
 
-import tifffile
-def stack_inference(stack, callback):
-    de_stacked_images = []
+# def stack_inference(stack, callback):
+#     de_stacked_images = []
 
-    # Unpack the stack
-    with tempfile.TemporaryDirectory() as temp_dir:
-        with tifffile.TiffFile(stack) as stack:
-            for page in stack.pages:
-                print(stack)
-                print(page)
-                print(f"Stacked {stack} page {page.index}")
-                array_data = page.asarray()
-                print("Array shape:", array_data.shape)
-                image = sitk.GetImageFromArray(page.asarray())
-                output_path = Path(temp_dir) / f"image_{page.index}.jpg"
-                sitk.WriteImage(image, str(output_path))
-                de_stacked_images.append(output_path)
-                print(f"De-Stacked {output_path}")
+#     # Unpack the stack
+#     with tempfile.TemporaryDirectory() as temp_dir:
+#         with tifffile.TiffFile(stack) as stack:
+#             for page in stack.pages:
+#                 print(stack)
+#                 print(page)
+#                 print(f"Stacked {stack} page {page.index}")
+#                 array_data = page.asarray()
+#                 print("Array shape:", array_data.shape)
+#                 image = sitk.GetImageFromArray(page.asarray())
+#                 output_path = Path(temp_dir) / f"image_{page.index}.jpg"
+#                 sitk.WriteImage(image, str(output_path))
+#                 de_stacked_images.append(output_path)
+#                 print(f"De-Stacked {output_path}")
 
-        # Loop over the images, and generate the actual tasks
-        for index, image in enumerate(de_stacked_images):
-            # Call back that saves the result
-            yield image, callback
+#         # Loop over the images, and generate the actual tasks
+#         for index, image in enumerate(de_stacked_images):
+#             # Call back that saves the result
+#             yield image, callback
 
         #     # Iterate through all pages
         #     for page_num in range(tiff_image.n_frames):
