@@ -44,10 +44,10 @@ def inference_tasks():
           glaucomatous_features_stacked.append(DEFAULT_GLAUCOMATOUS_FEATURES)
 
   for file_path in input_files:
-      if file_path.suffix == ".mha":  # A single image
-          yield from single_file_inference(image_file=file_path, callback=save_prediction)
-      elif file_path.suffix == ".tiff" or file_path.suffix == ".tif":
+      if file_path.suffix == ".tiff" or file_path.suffix == ".tif":
           yield from stack_inference(stack=file_path, callback=save_prediction)
+      else:
+          yield from single_file_inference(image_file=file_path, callback=save_prediction)
 
   write_referable_glaucoma_decision(is_referable_glaucoma_stacked)
   write_referable_glaucoma_decision_likelihood(
@@ -55,6 +55,8 @@ def inference_tasks():
   )
   write_glaucomatous_features(glaucomatous_features_stacked)
 
+
+  
 
 def single_file_inference(image_file, callback):
     with tempfile.TemporaryDirectory() as temp_dir:
@@ -86,30 +88,61 @@ def single_file_inference(image_file, callback):
         yield output_path, callback
 
 
+
+# if case.path.suffix == '.tiff':
+#             results = []
+#             with tifffile.TiffFile(case.path) as stack:
+#                 for page in tqdm.tqdm(stack.pages):
+#                     input_image_array = page.asarray()
+#                     results.append(self.predict(my_models=my_models, input_image_array=input_image_array))
+#         else:
+#             input_image = SimpleITK.ReadImage(str(case.path))
+#             input_image_array = SimpleITK.GetArrayFromImage(input_image)
+#             results = [self.predict(input_image_array=input_image_array)]
+        
+#         results = self.combine_dicts(results)
+
+import tifffile
 def stack_inference(stack, callback):
     de_stacked_images = []
 
     # Unpack the stack
     with tempfile.TemporaryDirectory() as temp_dir:
-        with Image.open(stack) as tiff_image:
-
-            # Iterate through all pages
-            for page_num in range(tiff_image.n_frames):
-                # Select the current page
-                tiff_image.seek(page_num)
-
-                # Define the output file path
-                output_path = Path(temp_dir) / f"image_{page_num + 1}.jpg"
-                tiff_image.save(output_path, "JPEG")
-
+        with tifffile.TiffFile(stack) as stack:
+            for page in stack.pages:
+                print(stack)
+                print(page)
+                print(f"Stacked {stack} page {page.index}")
+                array_data = page.asarray()
+                print("Array shape:", array_data.shape)
+                image = sitk.GetImageFromArray(page.asarray())
+                output_path = Path(temp_dir) / f"image_{page.index}.jpg"
+                sitk.WriteImage(image, str(output_path))
                 de_stacked_images.append(output_path)
-
                 print(f"De-Stacked {output_path}")
 
         # Loop over the images, and generate the actual tasks
         for index, image in enumerate(de_stacked_images):
             # Call back that saves the result
             yield image, callback
+
+        #     # Iterate through all pages
+        #     for page_num in range(tiff_image.n_frames):
+        #         # Select the current page
+        #         tiff_image.seek(page_num)
+
+        #         # Define the output file path
+        #         output_path = Path(temp_dir) / f"image_{page_num + 1}.jpg"
+        #         tiff_image.save(output_path, "JPEG")
+
+        #         de_stacked_images.append(output_path)
+
+        #         print(f"De-Stacked {output_path}")
+
+        # # Loop over the images, and generate the actual tasks
+        # for index, image in enumerate(de_stacked_images):
+        #     # Call back that saves the result
+        #     yield image, callback
 
 
 def write_referable_glaucoma_decision(result):

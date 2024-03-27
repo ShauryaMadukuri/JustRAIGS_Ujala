@@ -50,8 +50,7 @@ def get_result_task2(processor,model,checkpoint_path,image_path):
     model.load_state_dict(torch.load(checkpoint_path))
 
     # Assuming you have a validation DataLoader named val_loader
-    # device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-    device = 'cpu'
+    device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
     model.to(device)
 
     # Image processing
@@ -66,7 +65,7 @@ def get_result_task2(processor,model,checkpoint_path,image_path):
 
     prob_predictions = torch.sigmoid(outputs)
     # make it into 0,1
-    predictions=(prob_predictions>0.4).int().tolist()[0]
+    predictions=(prob_predictions>0.4).tolist()[0]
     return predictions
 
 
