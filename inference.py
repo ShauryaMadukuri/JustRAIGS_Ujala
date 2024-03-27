@@ -26,14 +26,8 @@ import os
 
 
 def get_result_task1(processor,model,checkpoint_path,image_path):
-    model.load_state_dict(torch.load(checkpoint_path))
-    # Assuming you have a validation DataLoader named val_loader
-    device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-    model.to(device)
-    #   image = cv2.imread(image_path)
-    #   image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
     image = Image.open(image_path)
-
+    device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
     # Process the image with the provided processor
     inputs = processor(images=image, return_tensors="pt").to(device)
     logits = model(**inputs).logits
@@ -46,12 +40,9 @@ def get_result_task1(processor,model,checkpoint_path,image_path):
 
 
 def get_result_task2(processor,model,checkpoint_path,image_path):
-    model.classifier = nn.Linear(model.classifier.in_features, 10)
-    model.load_state_dict(torch.load(checkpoint_path))
-
     # Assuming you have a validation DataLoader named val_loader
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-    model.to(device)
+    # model.to(device)
 
     # Image processing
     #   image = cv2.imread(image_path)
@@ -64,7 +55,6 @@ def get_result_task2(processor,model,checkpoint_path,image_path):
     outputs = model(**inputs).logits
 
     prob_predictions = torch.sigmoid(outputs)
-    # make it into 0,1
     predictions=(prob_predictions>0.4).tolist()[0]
     return predictions
 
@@ -121,6 +111,10 @@ def run():
 
     # Load the model checkpoint
     model = Swinv2ForImageClassification.from_pretrained(model_directory)
+    model.load_state_dict(torch.load(checkpoint_path))
+    # Assuming you have a validation DataLoader named val_loader
+    device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+    model.to(device)
     print('Model 1 loaded successfully')
 
     # Path of the checkpoint relative to the current directory
@@ -151,6 +145,9 @@ def run():
     checkpoint_path_2 = os.path.join(current_directory, checkpoint_path_2)
 
     print("checkpoint_path_2 =", checkpoint_path_2)
+    model_2.classifier = nn.Linear(model_2.classifier.in_features, 10)
+    model_2.load_state_dict(torch.load(checkpoint_path_2))
+    model_2.to(device)
 
     print('Model 2 loaded successfully')
     
@@ -172,7 +169,7 @@ def run():
 
 
         is_referable_glaucoma_likelihood = predicted_probability_RG
-        is_referable_glaucoma = predicted_label
+        is_referable_glaucoma = bool(predicted_label)
         if is_referable_glaucoma:
             # Define the local directory path where your model is saved
             
