@@ -111,11 +111,7 @@ def run():
 
     # Load the model checkpoint
     model = Swinv2ForImageClassification.from_pretrained(model_directory)
-    model.load_state_dict(torch.load(checkpoint_path))
-    # Assuming you have a validation DataLoader named val_loader
-    device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-    model.to(device)
-    print('Model 1 loaded successfully')
+    
 
     # Path of the checkpoint relative to the current directory
     checkpoint_path_relative = 'checkpoints/swin_finetunetask11.pth'
@@ -125,6 +121,11 @@ def run():
 
     # Print the checkpoint path
     print("checkpoint_path =", checkpoint_path)
+    model.load_state_dict(torch.load(checkpoint_path))
+    # Assuming you have a validation DataLoader named val_loader
+    device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+    model.to(device)
+    print('Model 1 loaded successfully')
 
 
 
