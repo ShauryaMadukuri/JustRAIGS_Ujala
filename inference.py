@@ -114,7 +114,7 @@ def run():
     
 
     # Path of the checkpoint relative to the current directory
-    checkpoint_path_relative = 'checkpoints/swin_finetunetask11.pth'
+    checkpoint_path_relative = 'checkpoints/swin_phase2_finetunetask15.pth'
 
     # Join the checkpoint path with the current working directory
     checkpoint_path = os.path.join(current_directory, checkpoint_path_relative)
@@ -141,7 +141,7 @@ def run():
     # Load the model checkpoint
     model_2 = Swinv2ForImageClassification.from_pretrained(model_directory_2)
 
-    checkpoint_path_2 = 'checkpoints/swin_finetunetask219.pth'
+    checkpoint_path_2 = 'checkpoints/swin_phase2_finetunetask211.pth'
 
     checkpoint_path_2 = os.path.join(current_directory, checkpoint_path_2)
 
