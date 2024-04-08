@@ -4,3 +4,4 @@ imagecodecs
 numpy
 torch
 transformers
+ultralytics

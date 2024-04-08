@@ -1,156 +1,41 @@
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-
+import os
 import random
 from transformers import AutoImageProcessor, Swinv2ForImageClassification
 import numpy
 from PIL import Image
 from helper import DEFAULT_GLAUCOMATOUS_FEATURES, inference_tasks
 from transformers import AutoModelForImageClassification, AutoConfig
+from load_models import get_yolo_model,get_image_model_processor,get_roi_model_pocessor, get_roi_model_processor_task2, get_image_model_processor_task2
+from predict_task1 import predict_pipeline_glacoma
+from predict_task2 import get_result_task2
 
-import os
+
 
 # Set the environment variable TRANSFORMERS_OFFLINE to 1
 os.environ['TRANSFORMERS_OFFLINE'] = '1'
 print(f"TRANSFORMERS_OFFLINE: {os.environ.get('TRANSFORMERS_OFFLINE')}")
-import os
 
-
-
-# # Set the environment variable HF_HOME to the cache directory
-# os.environ['HF_HOME'] = '/cache/huggingface'
-# print(f"HF_HOME: {os.environ.get('HF_HOME')}")
-# # Set the environment variable TRANSFORMERS_CACHE to the cache directory
-# os.environ['TRANSFORMERS_CACHE'] = '/cache/huggingface'
-
-
-def get_result_task1(processor,model,checkpoint_path,image_path):
-    image = Image.open(image_path)
-    device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-    # Process the image with the provided processor
-    inputs = processor(images=image, return_tensors="pt").to(device)
-    logits = model(**inputs).logits
-    predicted_label = logits.argmax(-1).item()
-    # Apply softmax to get probabilities
-    probs = F.softmax(logits, dim=1)
-    predicted_probability_RG = probs[0][1].item()
-
-    return predicted_probability_RG,predicted_label
-
-
-def get_result_task2(processor,model,checkpoint_path,image_path):
-    # Assuming you have a validation DataLoader named val_loader
-    device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-    # model.to(device)
-
-    # Image processing
-    #   image = cv2.imread(image_path)
-    #   image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
-    image = Image.open(image_path)
-
-    # Process the image with the provided processor
-    inputs = processor(images=image, return_tensors="pt").to(device)
-
-    outputs = model(**inputs).logits
-
-    prob_predictions = torch.sigmoid(outputs)
-    predictions=(prob_predictions>0.4).tolist()[0]
-    return predictions
-
-
-def print_contents_of_folder(folder_path):
-        print(f"Contents of folder: {folder_path}")
-        for item in os.listdir(folder_path):
-            print(item)
 
 
 def run():
     _show_torch_cuda_info()
     # Get the current working directory
     current_directory = os.getcwd()
-
-    # Print the current working directory
-    print("Current working directory:", current_directory)
-
-    # Print all folder names and file names in the current directory
-    print("Contents of the current directory:")
-    for item in os.listdir(current_directory):
-        print(item)
-
-    # Print all folder names and file names in the current directory
-    print("Contents of the current directory:")
-    for item in os.listdir(current_directory):
-        print(item)
-        if os.path.isdir(os.path.join(current_directory, item)):
-            print_contents_of_folder(os.path.join(current_directory, item))
-
-    
-    print('Starting the model loading process...')
-    # Folder to join
-    folder_to_join = "swinv2_tiny_model"
-
-    # Join the folder to the current working directory
-    model_directory = os.path.join(current_directory, folder_to_join)
-
-    # Print the model_directory path
-    print("model_directory =", model_directory)
-
-    # # List files in the model directory
-    # print('this is model loading')
-
-    # files_in_model_directory = os.listdir(model_directory)
-
-    # # Print the files
-    # print("Files in model_directory:")
-    # for file in files_in_model_directory:
-    #     print(file)
-
-    # Load the image processor if needed
-    processor = AutoImageProcessor.from_pretrained(model_directory)
-
-    # Load the model checkpoint
-    model = Swinv2ForImageClassification.from_pretrained(model_directory)
-    
-
-    # Path of the checkpoint relative to the current directory
-    checkpoint_path_relative = 'checkpoints/swin_phase2_finetunetask15.pth'
-
-    # Join the checkpoint path with the current working directory
-    checkpoint_path = os.path.join(current_directory, checkpoint_path_relative)
-
-    # Print the checkpoint path
-    print("checkpoint_path =", checkpoint_path)
-    model.load_state_dict(torch.load(checkpoint_path))
-    # Assuming you have a validation DataLoader named val_loader
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-    model.to(device)
-    print('Model 1 loaded successfully')
 
+    # Load the models
+    yolo_model = get_yolo_model()
 
+    # Load the models for task 1
+    roi_processor_t1 , roi_model_t1 = get_roi_model_pocessor()
+    image_processor_t1, image_model_t1 = get_image_model_processor()
 
-    model_directory_2 = "swinv2_tiny_model"
-
-    model_directory_2 = os.path.join(current_directory, model_directory_2)
-
-    print("model_directory_2 =", model_directory_2)
-
-    # Load the image processor if needed
-    processor_2 = AutoImageProcessor.from_pretrained(model_directory_2)
-
-    # Load the model checkpoint
-    model_2 = Swinv2ForImageClassification.from_pretrained(model_directory_2)
-
-    checkpoint_path_2 = 'checkpoints/swin_phase2_finetunetask211.pth'
-
-    checkpoint_path_2 = os.path.join(current_directory, checkpoint_path_2)
-
-    print("checkpoint_path_2 =", checkpoint_path_2)
-    model_2.classifier = nn.Linear(model_2.classifier.in_features, 10)
-    model_2.load_state_dict(torch.load(checkpoint_path_2))
-    model_2.to(device)
-
-    print('Model 2 loaded successfully')
+    # Load the models for task 2
+    roi_processor_t2 , roi_model_t2 = get_roi_model_processor_task2()
+    image_processor_t2, image_model_t2 = get_image_model_processor_task2()
     
 
     for jpg_image_file_name, save_prediction in inference_tasks():
@@ -165,8 +50,10 @@ def run():
         
         image_path=jpg_image_file_name
 
-        result_task1 = get_result_task1(processor,model,checkpoint_path,image_path)
-        predicted_probability_RG,predicted_label = result_task1
+        prob_score,pred_int,detected,roi=predict_pipeline_glacoma(image_path,yolo_model,roi_processor_t1,
+                                                                  roi_model_t1,image_processor_t1
+                                                                  ,image_model_t1,device)
+        predicted_probability_RG,predicted_label = prob_score,pred_int
 
 
         is_referable_glaucoma_likelihood = predicted_probability_RG
@@ -174,10 +61,12 @@ def run():
         if is_referable_glaucoma:
             # Define the local directory path where your model is saved
             
-            result_task2 = get_result_task2(processor_2,model_2,checkpoint_path_2,image_path)
+            t2_results=get_result_task2(image_path,roi,roi_processor_t2,
+                                        roi_model_t2,image_processor_t2,
+                                        image_model_t2,detected)
             features = {
                 k: v
-                for k, v in zip(DEFAULT_GLAUCOMATOUS_FEATURES.keys(), result_task2)
+                for k, v in zip(DEFAULT_GLAUCOMATOUS_FEATURES.keys(), t2_results)
             }
         else:
             # make all null
