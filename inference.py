@@ -2,12 +2,8 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 import os
-import random
-from transformers import AutoImageProcessor, Swinv2ForImageClassification
-import numpy
 from PIL import Image
 from helper import DEFAULT_GLAUCOMATOUS_FEATURES, inference_tasks
-from transformers import AutoModelForImageClassification, AutoConfig
 from load_models import get_yolo_model,get_image_model_processor,get_roi_model_pocessor, get_roi_model_processor_task2, get_image_model_processor_task2
 from predict_task1 import predict_pipeline_glacoma
 from predict_task2 import get_result_task2
@@ -44,9 +40,6 @@ def run():
 
         print(f"Running inference on {jpg_image_file_name}")
 
-        # # For example: use Pillow to read the jpg file and convert it to a NumPY array:
-        # image = Image.open(jpg_image_file_name)
-        # numpy_array = numpy.array(image)
         
         image_path=jpg_image_file_name
 

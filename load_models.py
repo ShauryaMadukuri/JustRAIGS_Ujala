@@ -1,4 +1,6 @@
 import os
+import ultralytics
+ultralytics.checks()
 from ultralytics import YOLO
 from transformers import AutoImageProcessor, Swinv2ForImageClassification
 import torch
