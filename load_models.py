@@ -1,4 +1,5 @@
 import os
+import cv2
 import ultralytics
 ultralytics.checks()
 from ultralytics import YOLO

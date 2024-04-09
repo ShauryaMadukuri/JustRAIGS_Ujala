@@ -6,3 +6,5 @@ torch
 transformers
 ultralytics==8.0.196
 opencv-python
+libgl1-mesa-glx; sys_platform == 'linux'  # For Debian/Ubuntu based systems
+mesa-libGL; sys_platform == 'linux'  # For Red Hat based systems
