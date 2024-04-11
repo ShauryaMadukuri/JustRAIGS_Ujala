@@ -6,3 +6,5 @@ numpy
 imagecodecs
 torch
 transformers
+libgl1-mesa-glx
+mesa-libGL
