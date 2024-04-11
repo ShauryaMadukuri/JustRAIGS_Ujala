@@ -1,7 +1,7 @@
 pillow
 SimpleITK
 opencv-python==4.5.5.62
-ultralytics==8.0.196
+ultralytics
 numpy
 imagecodecs
 torch
