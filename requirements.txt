@@ -6,5 +6,3 @@ numpy
 imagecodecs
 torch
 transformers
-libgl1-mesa-glx; sys_platform == 'linux'  # For Debian/Ubuntu based systems
-mesa-libGL; sys_platform == 'linux'  # For Red Hat based systems
