@@ -8,6 +8,12 @@ USER user
 
 WORKDIR /opt/app
 
+# Ensure that the necessary directories have appropriate permissions
+USER root
+RUN mkdir -p /var/lib/apt/lists/partial && \
+    chmod -R 755 /var/lib/apt/lists/partial
+USER user
+
 # Install OpenGL libraries
 RUN apt-get update && \
     apt-get install -y libgl1-mesa-glx
