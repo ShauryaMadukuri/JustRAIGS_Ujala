@@ -8,6 +8,10 @@ USER user
 
 WORKDIR /opt/app
 
+# Install OpenGL libraries
+RUN sudo apt-get update && \
+    sudo apt-get install -y libgl1-mesa-glx
+
 COPY --chown=user:user requirements.txt /opt/app
 
 RUN python -m pip install \
