@@ -34,7 +34,7 @@ def get_roi_model_pocessor():
     roi_model.classifier = nn.Linear(roi_model.classifier.in_features, 1)
 
 
-    roi_checkpoint_path = 'checkpoints\task1\roi\roi_swin_phase2_finetunetask115.pth'
+    roi_checkpoint_path = 'checkpoints/task1/roi/roi_swin_phase2_finetunetask115.pth'
     roi_checkpoint_path= os.path.join(current_directory, roi_checkpoint_path)
     
     roi_model.load_state_dict(torch.load(roi_checkpoint_path))
@@ -53,7 +53,7 @@ def get_image_model_processor():
     # Load the model checkpoint
     image_task1_model = Swinv2ForImageClassification.from_pretrained(swin_full_image_glauc_model_path)
 
-    image_task1_model_checkpoint_path = 'checkpoints\task1\image\swin_phase2_finetunetask15.pth'
+    image_task1_model_checkpoint_path = 'checkpoints/task1/image/swin_phase2_finetunetask15.pth'
     image_task1_model_checkpoint_path = os.path.join(current_directory, image_task1_model_checkpoint_path)
 
     image_task1_model.load_state_dict(torch.load(image_task1_model_checkpoint_path))
@@ -75,7 +75,7 @@ def get_roi_model_processor_task2():
     roi_model_task2.classifier = nn.Linear(roi_model_task2.classifier.in_features, 10)
 
 
-    roi_checkpoint_path_task2 = 'checkpoints\task2\roi\roi_swin_finetunetask220.pth'
+    roi_checkpoint_path_task2 = 'checkpoints/task2/roi/roi_swin_finetunetask220.pth'
     roi_checkpoint_path_task2 = os.path.join(current_directory, roi_checkpoint_path_task2)
 
     roi_model_task2.load_state_dict(torch.load(roi_checkpoint_path_task2))
@@ -97,7 +97,7 @@ def get_image_model_processor_task2():
     image_task2_model = Swinv2ForImageClassification.from_pretrained(swin_full_image_multi_label_model_path)
     image_task2_model.classifier = nn.Linear(image_task2_model.classifier.in_features, 10)
 
-    image_task2_model_checkpoint_path = 'checkpoints\task2\image\swin_phase2_finetunetask211.pth'
+    image_task2_model_checkpoint_path = 'checkpoints/task2/image/swin_phase2_finetunetask211.pth'
     image_task2_model_checkpoint_path = os.path.join(current_directory, image_task2_model_checkpoint_path)
 
     image_task2_model.load_state_dict(torch.load(image_task2_model_checkpoint_path))
