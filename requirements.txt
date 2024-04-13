@@ -6,3 +6,4 @@ imagecodecs
 torch
 transformers
 pandas
+ultralytics
