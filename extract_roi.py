@@ -17,7 +17,7 @@ def preprocess(image_path):
 
 # Define a function to convert bounding boxes from (xcenter, ycenter, width, height) to (x1, y1, x2, y2)
 def convert_to_x1y1x2y2(boxes,image):
-  h, w, _ = image.shape
+  h, w = image.size
   result=[]
   for box in boxes:
     xcenter,ycenter,width,height=box
@@ -106,7 +106,7 @@ def crop_bbox(image, x1, y1, x2, y2):
     """
     # Convert coordinates to integers
     x1, y1, x2, y2 = int(x1), int(y1), int(x2), int(y2)
-    cropped_bbox = image[y1:y2, x1:x2]
+    cropped_bbox = image.crop((x1, y1, x2, y2))
     return cropped_bbox
 
 
