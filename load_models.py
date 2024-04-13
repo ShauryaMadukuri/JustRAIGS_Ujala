@@ -13,7 +13,7 @@ device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
 def get_yolo_model():
     yolo_weights = 'yolov5'
-    yolo_model_path = "yolov5/runs/train/exp/weights/best.pt"
+    yolo_model_path = "yolov5_model/runs/train/exp/weights/best.pt"
     yolo_model = torch.hub.load(yolo_weights, 'custom', path=yolo_model_path, source="local")
     return yolo_model
 
