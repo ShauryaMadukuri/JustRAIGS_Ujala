@@ -1,16 +1,35 @@
 import cv2
 import numpy as np
 import os
-
+import pandas as pd
 
 def preprocess(image_path):
     # Read the image
     image = cv2.imread(image_path)
 
+# Convert BGR to RGB
+    image_rgb = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+
     # Resize the image to 608x800
-    resized_image = cv2.resize(image, (800, 608))
+    resized_image = cv2.resize(image_rgb, (800, 608))
 
     return resized_image
+
+# Define a function to convert bounding boxes from (xcenter, ycenter, width, height) to (x1, y1, x2, y2)
+def convert_to_x1y1x2y2(boxes,image):
+  h, w, _ = image.shape
+  result=[]
+  for box in boxes:
+    xcenter,ycenter,width,height=box
+    # Convert ratios to absolute coordinates
+    x1 = int((xcenter - width / 2) * w)
+    y1 = int((ycenter - height / 2) * h)
+    x2 = int((xcenter + width / 2) * w)
+    y2 = int((ycenter + height / 2) * h)
+    new_box=[x1,y1,x2,y2]
+    result.append(new_box)
+
+  return result
 
 
 def merge_boxes(boxes, confidences):
@@ -74,23 +93,61 @@ def help_extract(resized_image, x1, y1, x2, y2):
     return roi
 
 
+def crop_bbox(image, x1, y1, x2, y2):
+    """
+    Crop bounding box from the image based on parameters.
+    
+    Args:
+    - image: The resized image from which to crop the bounding box.
+    - x1, y1, x2, y2: Coordinates of the bounding box.
+    
+    Returns:
+    - Cropped bounding box image.
+    """
+    # Convert coordinates to integers
+    x1, y1, x2, y2 = int(x1), int(y1), int(x2), int(y2)
+    cropped_bbox = image[y1:y2, x1:x2]
+    return cropped_bbox
+
+
+
 def extract_roi_single(model, image_path):
     original_filename = os.path.basename(image_path)
     filename_without_extension = os.path.splitext(original_filename)[0]
 
     resized_image = preprocess(image_path)
-    results = model.predict(resized_image, conf=0.26)
+    results = model(resized_image, size=700).pandas().xywhn[0]
+    
+    # Define columns for the DataFrame
+    cols = ["xcenter", "ycenter", "width",  "height", "confidence", "class", "name"]
 
-    merged_boxes, merged_confidences, merged_indices = merge_boxes(results[0].boxes.xyxy.cpu().numpy(), results[0].boxes.conf.cpu().numpy())
+    # Create a DataFrame from results
+    df = pd.DataFrame(results, columns=cols)
 
-    if len(merged_boxes) == 0:
+    # Filter out rows with confidence less than 0.5
+    df_filtered = df[df['confidence'] >= 0.5]
+
+    boxes = df_filtered[["xcenter", "ycenter", "width", "height"]].values
+    confidences = df_filtered["confidence"].values
+
+    if len(boxes) == 0:
         print(f"{image_path}_has some error in finding OD ")
         return False, None
 
+    # Convert bounding boxes to (x1, y1, x2, y2) format
+    x1y1x2y2_boxes = convert_to_x1y1x2y2(boxes,resized_image)
+
+    # Merge intersecting bounding boxes
+    merged_boxes, merged_confidences, _ = merge_boxes(x1y1x2y2_boxes, confidences)
+
+    # Get the bounding box with maximum confidence after merging
     max_conf_index = np.argmax(merged_confidences)
     x1, y1, x2, y2 = merged_boxes[max_conf_index]
+
+    # Crop the bounding box from the resized image
+    cropped_image = crop_bbox(resized_image, x1, y1, x2, y2)
+
     box_width = x2 - x1
     box_height = y2 - y1
-    roi = help_extract(resized_image, x1, y1, x2, y2)
-    return True, roi
+    return True, cropped_image
 

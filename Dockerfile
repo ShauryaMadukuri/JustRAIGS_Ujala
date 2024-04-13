@@ -25,7 +25,7 @@ COPY --chown=user:user predict_task2.py /opt/app
 COPY --chown=user:user checkpoints /opt/app/checkpoints
 COPY --chown=user:user swinv2_tiny_model /opt/app/swinv2_tiny_model
 COPY --chown=user:user swinv2_scratch_model /opt/app/swinv2_scratch_model
-COPY --chown=user:user yolo_model_weights /opt/app/yolo_model_weights
+COPY --chown=user:user yolov5 /opt/app/yolov5
 
 
 
