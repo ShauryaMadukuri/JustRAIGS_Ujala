@@ -1,19 +1,19 @@
-import cv2
 import numpy as np
 import os
 import pandas as pd
 
+from PIL import Image
+
 def preprocess(image_path):
-    # Read the image
-    image = cv2.imread(image_path)
-
-# Convert BGR to RGB
-    image_rgb = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
-
-    # Resize the image to 608x800
-    resized_image = cv2.resize(image_rgb, (800, 608))
-
-    return resized_image
+    # Open the image
+    with Image.open(image_path) as img:
+        # Convert BGR to RGB
+        image_rgb = img.convert("RGB")
+        
+        # Resize the image to 608x800
+        resized_image = image_rgb.resize((800, 608))
+        
+        return resized_image
 
 # Define a function to convert bounding boxes from (xcenter, ycenter, width, height) to (x1, y1, x2, y2)
 def convert_to_x1y1x2y2(boxes,image):

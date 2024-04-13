@@ -1,6 +1,5 @@
 pillow
 SimpleITK
-opencv-python
 numpy
 imagecodecs
 torch

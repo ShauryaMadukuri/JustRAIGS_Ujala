@@ -3,7 +3,6 @@ import torch.nn as nn
 import torch.nn.functional as F
 import os
 from PIL import Image
-import cv2
 from helper import DEFAULT_GLAUCOMATOUS_FEATURES, inference_tasks
 from load_models import get_yolo_model,get_image_model_processor,get_roi_model_pocessor, get_roi_model_processor_task2, get_image_model_processor_task2
 from predict_task1 import predict_pipeline_glacoma
