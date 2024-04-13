@@ -35,6 +35,8 @@ def get_roi_model_pocessor():
 
 
     roi_checkpoint_path = 'checkpoints\task1\roi\roi_swin_phase2_finetunetask115.pth'
+    roi_checkpoint_path= os.path.join(current_directory, roi_checkpoint_path)
+    
     roi_model.load_state_dict(torch.load(roi_checkpoint_path))
 
     roi_model.to(device)
