@@ -2,6 +2,10 @@ FROM --platform=linux/amd64  pytorch/pytorch
 
 # Ensures that Python output to stdout/stderr is not buffered: prevents missing information when terminating
 ENV PYTHONUNBUFFERED 1
+    
+RUN apt-get update
+RUN apt-get install -y libgl1-mesa-glx
+
 
 RUN adduser --system --group user
 USER user
