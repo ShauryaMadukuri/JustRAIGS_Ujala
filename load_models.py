@@ -14,8 +14,10 @@ device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 # ROI EXTRACTION 
 
 def get_yolo_model():
-    yolo_model_path = "yolov8_model_weights\best.pt"
+    yolo_model_path = "yolov8_model_weights/best.pt"
     yolo_model_path = os.path.join(current_directory, yolo_model_path)
+    if not os.path.exists(yolo_model_path):
+        raise FileNotFoundError(f"YOLO model weights file not found at {yolo_model_path}")
     yolo_model = YOLO(yolo_model_path)
     return yolo_model
 
