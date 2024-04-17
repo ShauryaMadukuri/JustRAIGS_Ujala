@@ -2,7 +2,9 @@ import os
 from transformers import AutoImageProcessor, Swinv2ForImageClassification
 import torch
 import torch.nn as nn
-
+import cv2
+import ultralytics
+from ultralytics import YOLO
 
 
 current_directory = os.getcwd()
@@ -12,9 +14,9 @@ device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 # ROI EXTRACTION 
 
 def get_yolo_model():
-    yolo_weights = 'yolov5'
-    yolo_model_path = "yolov5/runs/train/exp/weights/best.pt"
-    yolo_model = torch.hub.load(yolo_weights, 'custom', path=yolo_model_path, source="local")
+    yolo_model_path = "yolov8_model_weights\best.pt"
+    yolo_model_path = os.path.join(current_directory, yolo_model_path)
+    yolo_model = YOLO(yolo_model_path)
     return yolo_model
 
 

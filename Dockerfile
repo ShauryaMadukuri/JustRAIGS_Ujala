@@ -32,6 +32,8 @@ COPY --chown=user:user checkpoints /opt/app/checkpoints
 COPY --chown=user:user swinv2_tiny_model /opt/app/swinv2_tiny_model
 COPY --chown=user:user swinv2_scratch_model /opt/app/swinv2_scratch_model
 COPY --chown=user:user yolov5 /opt/app/yolov5
+COPY --chown=user:user yolov8_model_weights /opt/app/yolov8_model_weights
+
 
 
 
