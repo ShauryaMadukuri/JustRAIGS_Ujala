@@ -6,16 +6,15 @@ import cv2
 from PIL import Image
 
 def preprocess(image_path):
-    # Read the image	    
+    # Read the image	 
+    current_directory = os.getcwd()
+    image_path = os.path.join(current_directory, image_path)
+
     image = cv2.imread(image_path)	   
-
-# Convert BGR to RGB
+    # Convert BGR to RGB
     image_rgb = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
-
     # Resize the image to 608x800	    # Resize the image to 608x800
-    resized_image = cv2.resize(image, (800, 608))	  
-
-
+    resized_image = cv2.resize(image_rgb, (800, 608))	  
     return resized_image
 
 # # Define a function to convert bounding boxes from (xcenter, ycenter, width, height) to (x1, y1, x2, y2)
