@@ -5,6 +5,7 @@ import os
 from extract_roi import extract_roi_single
 import cv2
 
+
 # perdict if OD has been detected
 def predict_roi(roi,processor,model,device):
   inputs = processor(images=roi, return_tensors="pt").to(device)
@@ -19,7 +20,8 @@ def predict_roi(roi,processor,model,device):
 def predict_image(image_path,processor,model,device):
     current_directory = os.getcwd()
     image_path = os.path.join(current_directory, image_path)
-    image=Image.open(image_path).convert('RGB')
+    image=cv2.imread(image_path)
+    image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
     # Process the image with the provided processor
     inputs = processor(images=image, return_tensors="pt").to(device)
     logits = model(**inputs).logits

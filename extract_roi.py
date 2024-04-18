@@ -118,7 +118,7 @@ def extract_roi_single(model, image_path):
     filename_without_extension = os.path.splitext(original_filename)[0]
 
     resized_image = preprocess(image_path)
-    results = model.predict(resized_image, conf=0.26)
+    results = model.predict(resized_image, conf=0.30)
     merged_boxes, merged_confidences, merged_indices = merge_boxes(results[0].boxes.xyxy.cpu().numpy(), results[0].boxes.conf.cpu().numpy())
     if len(merged_boxes) == 0:
         print(f"{image_path}_has some error in finding OD ")
