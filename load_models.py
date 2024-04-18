@@ -57,7 +57,7 @@ def get_image_model_processor():
     # Load the model checkpoint
     image_task1_model = Swinv2ForImageClassification.from_pretrained(swin_full_image_glauc_model_path)
 
-    image_task1_model_checkpoint_path = 'checkpoints/task1/image/swin_phase2_finetunetask15.pth'
+    image_task1_model_checkpoint_path = 'checkpoints/task1/image/swin_dataaug_phase2_finetunetask13.pth'
     image_task1_model_checkpoint_path = os.path.join(current_directory, image_task1_model_checkpoint_path)
 
     image_task1_model.load_state_dict(torch.load(image_task1_model_checkpoint_path))

@@ -1,9 +1,9 @@
 import torch
 from PIL import Image
 import torch.nn.functional as F
-
+import os
 from extract_roi import extract_roi_single
-
+import cv2
 
 # perdict if OD has been detected
 def predict_roi(roi,processor,model,device):
@@ -17,7 +17,9 @@ def predict_roi(roi,processor,model,device):
 
 # Predict if image
 def predict_image(image_path,processor,model,device):
-    image = Image.open(image_path)
+    current_directory = os.getcwd()
+    image_path = os.path.join(current_directory, image_path)
+    image=Image.open(image_path).convert('RGB')
     # Process the image with the provided processor
     inputs = processor(images=image, return_tensors="pt").to(device)
     logits = model(**inputs).logits
@@ -32,7 +34,9 @@ def predict_image(image_path,processor,model,device):
 
 def predict_pipeline_glacoma(raw_image_path,yolo_model,roi_processor,roi_model,image_processor,image_model,device='cuda'):
 
-  detected , roi=extract_roi_single(yolo_model,raw_image_path)
+  # detected , roi=extract_roi_single(yolo_model,raw_image_path)
+  detected=False
+  roi=None
   if detected:
     prob_score,pred_int=predict_roi(roi,roi_processor,roi_model,device)
   else:
