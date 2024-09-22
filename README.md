@@ -2,8 +2,8 @@
 
 The code in this repository is part of the research work published in the IEEE conference. For more details, you can refer to the following paper:
 
-- **Title**: [Glaucoma Abnormality Classification Using Yolo and Swin Transformer]  
-- **Authors**: [Madukuri Shaurya; Anumeha Varma; Monika Agrawal]  
+- **Title**: Glaucoma Abnormality Classification Using Yolo and Swin Transformer] 
+- **Authors**: Madukuri Shaurya, Anumeha Varma, Monika Agrawal
 - **Published In**: *IEEE International Symposium on Biomedical Imaging*  
 - **DOI**: [10.1109/ISBI56570.2024.10635301](https://ieeexplore.ieee.org/document/10635301)  
 
